@@ -27,6 +27,10 @@ namespace ToDoList
         {
             return taskText;
         }
+        public void SetTaskText(string taskText)
+        {
+            this.taskText = taskText;
+        }
 
     }
 }

@@ -80,5 +80,43 @@ namespace ToDoList
 
             return SelectedIndex;
         }
+        public int RunWithPrompt()
+        {
+            ConsoleKey keyPressed;
+            DisplayOptions();
+            do
+            {
+
+                //DisplayOptions();
+                
+                //WriteLine("Cursor: " + Console.CursorTop);
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                keyPressed = keyInfo.Key;
+
+                if (keyPressed == ConsoleKey.UpArrow)
+                {
+                    SelectedIndex--;
+                    //Console.SetCursorPosition(0, Console.CursorTop - 4);
+                    if (SelectedIndex == -1)
+                    {
+                        SelectedIndex = Options.Length - 1;
+                    }
+
+                }
+                else if (keyPressed == ConsoleKey.DownArrow)
+                {
+                    SelectedIndex++;
+
+                    if (SelectedIndex == Options.Length)
+                    {
+                        SelectedIndex = 0;
+                    }
+                }
+                Console.SetCursorPosition(0, Console.CursorTop - (Options.Length+2));
+                DisplayOptions();
+            } while (keyPressed != ConsoleKey.Enter);
+
+            return SelectedIndex;
+        }
     }
 }

@@ -12,6 +12,8 @@ namespace ToDoList
         private string[] Options;
         private int SelectedIndex;
         private string Prompt;
+        public static ConsoleColor MenuBgColor = ConsoleColor.White;
+        public static ConsoleColor TextColor = ConsoleColor.Black;
 
         public Menu(string prompt, string[] options)
         {
@@ -20,19 +22,21 @@ namespace ToDoList
             SelectedIndex = 0;
         }
 
+
+
         private void DisplayOptions()
         {
             WriteLine(Prompt);
             for (int i = 0; i < Options.Length; i++)
             {
                 string currentOption = Options[i];
-                string prefix;
+
 
                 if (i == SelectedIndex)
                 {
                     //prefix = "*";
-                    ForegroundColor = ConsoleColor.Black;
-                    BackgroundColor = ConsoleColor.White;
+                    ForegroundColor = TextColor;
+                    BackgroundColor = MenuBgColor;
                 }
                 else
                 {
@@ -57,7 +61,7 @@ namespace ToDoList
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
 
-                if(keyPressed == ConsoleKey.UpArrow)
+                if (keyPressed == ConsoleKey.UpArrow)
                 {
                     SelectedIndex--;
 
@@ -65,7 +69,7 @@ namespace ToDoList
                     {
                         SelectedIndex = Options.Length - 1;
                     }
-                    
+
                 }
                 else if (keyPressed == ConsoleKey.DownArrow)
                 {
@@ -88,7 +92,7 @@ namespace ToDoList
             {
 
                 //DisplayOptions();
-                
+
                 //WriteLine("Cursor: " + Console.CursorTop);
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
@@ -112,7 +116,7 @@ namespace ToDoList
                         SelectedIndex = 0;
                     }
                 }
-                Console.SetCursorPosition(0, Console.CursorTop - (Options.Length+2));
+                Console.SetCursorPosition(0, Console.CursorTop - (Options.Length + 2));
                 DisplayOptions();
             } while (keyPressed != ConsoleKey.Enter);
 

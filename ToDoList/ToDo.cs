@@ -12,6 +12,16 @@ namespace ToDoList
     {
         string fileLocation = "todo-items.txt";
         List<Task> tasksList = new List<Task>();
+        public string prompt = @"
+    ___________          .___       .__  .__          __   
+    \__    ___/___     __| _/____   |  | |__| _______/  |_ 
+      |    | /  _ \   / __ |/  _ \  |  | |  |/  ___/\   __\
+      |    |(  <_> ) / /_/ (  <_> ) |  |_|  |\___ \  |  |  
+      |____| \____/  \____ |\____/  |____/__/____  > |__|  
+                      \/                     \/        
+    (use UpArrow and DownArrow to select)
+";
+
         public void Start()
         {
             Title = "Todo List - Productivity App!";
@@ -21,18 +31,10 @@ namespace ToDoList
 
         private void RunMainMenu()
         {
-            string prompt = @"
- /$$$$$$$$              /$$                 /$$       /$$             /$$    
-|__  $$__/             | $$                | $$      |__/            | $$    
-   | $$  /$$$$$$   /$$$$$$$  /$$$$$$       | $$       /$$  /$$$$$$$ /$$$$$$  
-   | $$ /$$__  $$ /$$__  $$ /$$__  $$      | $$      | $$ /$$_____/|_  $$_/     
-   | $$| $$  | $$| $$  | $$| $$  | $$      | $$      | $$ \____  $$  | $$ /$$
-   | $$|  $$$$$$/|  $$$$$$$|  $$$$$$/      | $$$$$$$$| $$ /$$$$$$$/  |  $$$$/
-   |__/ \______/  \_______/ \______/       |________/|__/|_______/    \___/
-    (use UpArrow and DownArrow to select)
-";
-            string[] options = { "Add task", "Edit task", "Delete task", "View to do list", "Exit" };
-            Menu mainMenu = new Menu(prompt, options);
+            //Console.BackgroundColor = ConsoleBgColor;
+            
+            string[] options = { "Add task", "Edit task", "Delete task", "View to do list", "Settings","Exit" };
+            Menu mainMenu = new Menu(prompt + "\n Main menu", options);
             int selectedIndex = mainMenu.Run();
 
             switch (selectedIndex)
@@ -50,6 +52,9 @@ namespace ToDoList
                     ViewTodoList();
                     break;
                 case 4:
+                    Settings();
+                    break;
+                case 5:
                     ExitApp();
                     break;
             }
@@ -57,20 +62,28 @@ namespace ToDoList
         private void AddTask()
         {
             Clear();
-            WriteLine("Please, write you task below.");
+            WriteLine(prompt + "\n Please, write you task below.");
             string newTaskText = ReadLine();
             while (newTaskText == "")
             {
                 Clear();
-                WriteLine("Sorry, task cannot be empty. Write you task below.");
+                WriteLine(prompt + "\n Sorry, task cannot be empty. Write you task below.");
                 newTaskText = ReadLine();
             }
 
-            int newId = tasksList.Last().id + 1;
+            int newId;
+            if (tasksList.Count() == 0)
+            {
+                newId = 1;
+            }
+            else
+            {
+                newId = tasksList.Last().id + 1;
+            }
             tasksList.Add(new Task(newId,newTaskText));
 
             string[] options = { "Add another task", "Back" };            
-            Menu addMenu = new Menu("Task has been succesfully added", options );
+            Menu addMenu = new Menu(prompt + "\n Task has been succesfully added", options );
             int selectedIndex = addMenu.Run();
 
             switch (selectedIndex)
@@ -88,172 +101,257 @@ namespace ToDoList
         private void DeleteTask()
         {
             Clear();
-            WriteLine("There are your tasks.\n");
-            WriteLine("{0,5} {1,-50}", "ID", "Task\n");
-            tasksList.ForEach(task =>
-            {
-                WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
-            });
 
-
-            Write("Write ID of task to delete: ");
-            int idToDelete = Int32.Parse(ReadLine());            
-
-            while (!tasksList.Exists(task => task.id == idToDelete))
+            if (tasksList.Count() == 0)
             {
-                Write("Wrong ID. Try ID of task to delete again: ");
-                idToDelete = Int32.Parse(ReadLine());
-            } 
-            
-            for (int i = tasksList.Count - 1; i >= 0; i--)
-            {
-                if (tasksList[i].GetId() == idToDelete)
+                WriteLine(prompt + "\n You don't have task to do.\n");
+
+                string[] options = { "Add task", "Back to menu" };
+                Menu viewMenu = new Menu("\n Menu", options);
+                int selectedIndex = viewMenu.RunWithPrompt();
+
+                switch (selectedIndex)
                 {
-                   tasksList.Remove(tasksList[i]);                    
+                    case 0:
+                        AddTask();
+                        break;
+                    case 1:
+                        RunMainMenu();
+                        break;
+
                 }
             }
-            WriteLine("\nTask with ID = " + idToDelete + " has been succesfully deleted");
-
-            WriteLine("\n\nPress Enter to back to menu.");
-            ConsoleKeyInfo keyInfo = ReadKey(true);
-            ConsoleKey keyPressed = keyInfo.Key;
-
-            if (keyPressed == ConsoleKey.Enter)
+            else
             {
-                RunMainMenu();
-            }            
+                WriteLine(prompt + "\n There are your tasks.\n");
+                WriteLine("{0,5} {1,-50}", "ID", "Task\n");
+                tasksList.ForEach(task =>
+                {
+                    WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
+                });
+
+
+                Write("\n Write ID of task to delete: ");
+                int idToDelete = Int32.Parse(ReadLine());            
+
+                while (!tasksList.Exists(task => task.id == idToDelete))
+                {
+                    Write("\n Wrong ID. Try ID of task to delete again: ");
+                    idToDelete = Int32.Parse(ReadLine());
+                } 
+            
+                for (int i = tasksList.Count - 1; i >= 0; i--)
+                {
+                    if (tasksList[i].GetId() == idToDelete)
+                    {
+                       tasksList.Remove(tasksList[i]);                    
+                    }
+                }
+                WriteLine("\n Task with ID = " + idToDelete + " has been succesfully deleted");
+
+                WriteLine("\n\nPress Enter to back to menu.");
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                ConsoleKey keyPressed = keyInfo.Key;
+
+                if (keyPressed == ConsoleKey.Enter)
+                {
+                    RunMainMenu();
+                }            
+
+            }
+
         }
 
         private void ViewTodoList()
         {
             Clear();
-            WriteLine("There are your tasks.\n");
-            WriteLine("{0,5} {1,-50}", "ID", "Task\n");
-            tasksList.ForEach(task =>
+
+            if (tasksList.Count() == 0)
             {
-                WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
-            });
+                WriteLine(prompt + "\n You don't have task to do.\n");
 
-            //WriteLine("\n\nPress Enter to back to menu.");
-            //ConsoleKeyInfo keyInfo = ReadKey(true);
-            //ConsoleKey keyPressed = keyInfo.Key;
+                string[] options = { "Add task", "Back to menu" };
+                Menu viewMenu = new Menu("\n Menu", options);
+                int selectedIndex = viewMenu.RunWithPrompt();
 
-            //if (keyPressed == ConsoleKey.Enter)
-            //{
-            //    RunMainMenu();
-            //}
+                switch (selectedIndex)
+                {
+                    case 0:
+                        AddTask();
+                        break;
+                    case 1:
+                        RunMainMenu();
+                        break;
 
-            string[] options = { "Mark task as done", "Back to menu" };
-            Menu viewMenu = new Menu("\nMenu", options);
-            int selectedIndex = viewMenu.RunWithPrompt();
-
-            switch (selectedIndex)
-            {
-                case 0:
-                    MarkAsDone();
-                    break;
-                case 1:
-                    RunMainMenu();
-                    break;
-
+                }
             }
+            else
+            {
+                WriteLine(prompt + "\n There are your tasks.\n");
+                WriteLine("{0,5} {1,-50}", "ID", "Task\n");
+                tasksList.ForEach(task =>
+                {
+                    WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
+                });
+
+                string[] options = { "Add task", "Mark task as done", "Back to menu" };
+                Menu viewMenu = new Menu("\n Menu", options);
+                int selectedIndex = viewMenu.RunWithPrompt();
+
+                switch (selectedIndex)
+                {
+                    case 0:
+                        AddTask();
+                        break;
+                    case 1:
+                        MarkAsDone();
+                        break;
+                    case 2:
+                        RunMainMenu();
+                        break;
+
+                }
+            }       
 
         }
 
         private void EditTask()
         {
             Clear();
-            WriteLine("There are your tasks.\n");
-            WriteLine("{0,5} {1,-50}", "ID", "Task\n");
-            tasksList.ForEach(task =>
+
+            if (tasksList.Count() == 0)
             {
-                WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
-            });
+                WriteLine(prompt + "\n You don't have task to do.\n");
 
-            Write("\nWrite ID of task to edit: ");
-            int idToEdit = Int32.Parse(ReadLine());
+                string[] options = { "Add task", "Back to menu" };
+                Menu viewMenu = new Menu("\n Menu", options);
+                int selectedIndex = viewMenu.RunWithPrompt();
 
-            while (!tasksList.Exists(task => task.id == idToEdit))
-            {
-                Write("Wrong ID. Try ID of task to edit again: ");
-                idToEdit = Int32.Parse(ReadLine());
-            }
-
-            WriteLine("\nPlease, write new task text below");
-            string newTaskText = ReadLine();
-
-            tasksList.ForEach(task =>
-            {
-                if (task.GetId() == idToEdit)
+                switch (selectedIndex)
                 {
-                    task.SetTaskText(newTaskText);
+                    case 0:
+                        AddTask();
+                        break;
+                    case 1:
+                        RunMainMenu();
+                        break;
+
                 }
-            });
-            //for (int i = tasksList.Count - 1; i >= 0; i--)
-            //{
-            //    if (tasksList[i].GetId() == idToDelete)
-            //    {
-            //        tasksList
-            //    }
-            //}
-            WriteLine("\nTask with ID = " + idToEdit + " has been succesfully edited");
-
-            WriteLine("\n\nPress Enter to back to menu.");
-            ConsoleKeyInfo keyInfo = ReadKey(true);
-            ConsoleKey keyPressed = keyInfo.Key;
-
-            if (keyPressed == ConsoleKey.Enter)
-            {
-                RunMainMenu();
             }
+            else
+            {
+                WriteLine(prompt + "\n There are your tasks.\n");
+                WriteLine("{0,5} {1,-50}", "ID", "Task\n");
+                tasksList.ForEach(task =>
+                {
+                    WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
+                });
+
+                Write("\nWrite ID of task to edit: ");
+                int idToEdit = Int32.Parse(ReadLine());
+
+                while (!tasksList.Exists(task => task.id == idToEdit))
+                {
+                    Write("Wrong ID. Try ID of task to edit again: ");
+                    idToEdit = Int32.Parse(ReadLine());
+                }
+
+                WriteLine("\nPlease, write new task text below");
+                string newTaskText = ReadLine();
+
+                tasksList.ForEach(task =>
+                {
+                    if (task.GetId() == idToEdit)
+                    {
+                        task.SetTaskText(newTaskText);
+                    }
+                });
+
+
+                WriteLine("\nTask with ID = " + idToEdit + " has been succesfully edited");
+
+                WriteLine("\n\nPress Enter to back to menu.");
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                ConsoleKey keyPressed = keyInfo.Key;
+
+                if (keyPressed == ConsoleKey.Enter)
+                {
+                    RunMainMenu();
+                }
+            }
+                
         }
 
         private void MarkAsDone()
         {
             Clear();
-            WriteLine("There are your tasks.\n");
-            WriteLine("{0,5} {1,-50}", "ID", "Task\n");
-            tasksList.ForEach(task =>
+
+            if (tasksList.Count() == 0)
             {
-                WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
-            });
+                WriteLine(prompt + "\n You don't have task to do.\n");
 
-            Write("Write ID of done task: ");
-            int idToDone = Int32.Parse(ReadLine());
+                string[] options = { "Add task", "Back to menu" };
+                Menu viewMenu = new Menu("\n Menu", options);
+                int selectedIndex = viewMenu.RunWithPrompt();
 
-            while (!tasksList.Exists(task => task.id == idToDone))
-            {
-                Write("Wrong ID. Try write ID of task again: ");
-                idToDone = Int32.Parse(ReadLine());
-            }
-
-            //WriteLine("\n Please, write new task text below");
-            //string newTaskText = ReadLine();
-
-            for (int i = tasksList.Count - 1; i >= 0; i--)
-            {
-                if (tasksList[i].GetId() == idToDone)
+                switch (selectedIndex)
                 {
-                    tasksList.Remove(tasksList[i]);
+                    case 0:
+                        AddTask();
+                        break;
+                    case 1:
+                        RunMainMenu();
+                        break;
+
                 }
             }
-            //for (int i = tasksList.Count - 1; i >= 0; i--)
-            //{
-            //    if (tasksList[i].GetId() == idToDelete)
-            //    {
-            //        tasksList
-            //    }
-            //}
-            WriteLine("\nTask with ID = " + idToDone + " has been succesfully done");
-
-            WriteLine("\n\nPress Enter to back to menu.");
-            ConsoleKeyInfo keyInfo = ReadKey(true);
-            ConsoleKey keyPressed = keyInfo.Key;
-
-            if (keyPressed == ConsoleKey.Enter)
+            else
             {
-                RunMainMenu();
+                WriteLine(prompt + "\n There are your tasks.\n");
+                WriteLine("{0,5} {1,-50}", "ID", "Task\n");
+                tasksList.ForEach(task =>
+                {
+                    WriteLine("{0,5} {1,-50}", task.GetId(), task.GetTaskText());
+                });
+
+                Write("Write ID of done task: ");
+                int idToDone = Int32.Parse(ReadLine());
+
+                while (!tasksList.Exists(task => task.id == idToDone))
+                {
+                    Write("Wrong ID. Try write ID of task again: ");
+                    idToDone = Int32.Parse(ReadLine());
+                }
+
+                //WriteLine("\n Please, write new task text below");
+                //string newTaskText = ReadLine();
+
+                for (int i = tasksList.Count - 1; i >= 0; i--)
+                {
+                    if (tasksList[i].GetId() == idToDone)
+                    {
+                        tasksList.Remove(tasksList[i]);
+                    }
+                }
+                //for (int i = tasksList.Count - 1; i >= 0; i--)
+                //{
+                //    if (tasksList[i].GetId() == idToDelete)
+                //    {
+                //        tasksList
+                //    }
+                //}
+                WriteLine("\nTask with ID = " + idToDone + " has been succesfully done");
+
+                WriteLine("\n\nPress Enter to back to menu.");
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                ConsoleKey keyPressed = keyInfo.Key;
+
+                if (keyPressed == ConsoleKey.Enter)
+                {
+                    RunMainMenu();
+                }
             }
+                
         }
 
         private void ExitApp()
@@ -264,6 +362,77 @@ namespace ToDoList
             Environment.Exit(0);
         }
 
+
+        private void Settings()
+        {
+            string[] options = { "Menu background color", "Back" };
+            Menu mainMenu = new Menu(prompt + "\nSettings", options);
+            int selectedIndex = mainMenu.Run();
+
+            switch (selectedIndex)
+            {
+                case 0:
+                    ChangeMenuBgColor();
+                    break;
+                case 1:                    
+                    RunMainMenu();
+                    break;
+            }
+        }
+
+        private void ChangeMenuBgColor()
+        {
+            string[] options = { "White", "Blue", "Red" };
+            Menu mainMenu = new Menu(prompt + "\n Choose color", options);
+            int selectedIndex = mainMenu.Run();
+
+            switch (selectedIndex)
+            {
+                case 0:
+                    Menu.MenuBgColor = ConsoleColor.White;
+                    Menu.TextColor = ConsoleColor.Black;
+                    RunMainMenu();
+                    break;
+                case 1:
+                    Menu.MenuBgColor = ConsoleColor.Blue;
+                    Menu.TextColor = ConsoleColor.White;
+                    RunMainMenu();
+                    break;
+                case 2:
+                    Menu.MenuBgColor = ConsoleColor.Red;
+                    Menu.TextColor = ConsoleColor.White;
+                    RunMainMenu();
+                    break;
+            }
+        }
+
+        //private void ChangeConsoleBgColor()
+        //{
+        //    string[] options = { "White", "Blue", "Red" };
+        //    Menu mainMenu = new Menu("Choose color", options);
+        //    int selectedIndex = mainMenu.Run();
+
+        //    switch (selectedIndex)
+        //    {
+        //        case 0:
+        //            Console.BackgroundColor = ConsoleColor.White;
+        //            Console.ForegroundColor = ConsoleColor.Black;
+        //            Menu.MenuBgColor = ConsoleColor.Black;
+        //            Menu.TextColor = ConsoleColor.White;
+        //            RunMainMenu();
+        //            break;
+        //        case 1:
+        //            Menu.MenuBgColor = ConsoleColor.Blue;
+        //            Menu.TextColor = ConsoleColor.White;
+        //            RunMainMenu();
+        //            break;
+        //        case 2:
+        //            Menu.MenuBgColor = ConsoleColor.Red;
+        //            Menu.TextColor = ConsoleColor.White;
+        //            RunMainMenu();
+        //            break;
+        //    }
+        //}
 
         void LoadItems()
         {            

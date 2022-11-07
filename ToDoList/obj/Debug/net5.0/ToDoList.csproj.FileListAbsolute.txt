@@ -1,0 +1,16 @@
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ToDoList.exe
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ToDoList.deps.json
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ToDoList.runtimeconfig.json
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ToDoList.runtimeconfig.dev.json
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ToDoList.dll
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ref\ToDoList.dll
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\bin\Debug\net5.0\ToDoList.pdb
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.csproj.AssemblyReference.cache
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.GeneratedMSBuildEditorConfig.editorconfig
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.AssemblyInfoInputs.cache
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.AssemblyInfo.cs
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.csproj.CoreCompileInputs.cache
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.dll
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ref\ToDoList.dll
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.pdb
+D:\Studia\Semestr V\KCK\ToDoList\ToDoList\obj\Debug\net5.0\ToDoList.genruntimeconfig.cache

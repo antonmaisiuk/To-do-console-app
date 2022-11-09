@@ -1,5 +1,3 @@
-4,This is edit version this task
-5,Okej
-7,Commit and push new verison of project
-8,Hello
-9,Update CV
+2,eqweqwe
+4,22222
+5,Loll

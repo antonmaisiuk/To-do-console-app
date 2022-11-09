@@ -45,7 +45,7 @@ namespace ToDoList
                     ForegroundColor = ConsoleColor.White;
                 }
 
-                WriteLine($"<< {currentOption} >>");
+                WriteLine($" << {currentOption} >>");
             }
             ResetColor();
         }
@@ -53,10 +53,12 @@ namespace ToDoList
         public int Run()
         {
             ConsoleKey keyPressed;
+            DisplayOptions();
             do
             {
-                Clear();
-                DisplayOptions();
+                //DisplayOptions();
+                //Clear();
+                //DisplayOptions();
 
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
@@ -80,6 +82,9 @@ namespace ToDoList
                         SelectedIndex = 0;
                     }
                 }
+                //WriteLine("Cursor: " + Console.CursorTop);
+                Console.SetCursorPosition(0, 10);
+                DisplayOptions();
             } while (keyPressed != ConsoleKey.Enter);
 
             return SelectedIndex;
@@ -87,6 +92,7 @@ namespace ToDoList
         public int RunWithPrompt()
         {
             ConsoleKey keyPressed;
+            int cursorPos = Console.CursorTop;
             DisplayOptions();
             do
             {
@@ -116,7 +122,8 @@ namespace ToDoList
                         SelectedIndex = 0;
                     }
                 }
-                Console.SetCursorPosition(0, Console.CursorTop - (Options.Length + 2));
+                //Console.SetCursorPosition(0, Console.CursorTop - (Options.Length + 4));
+                Console.SetCursorPosition(0, cursorPos);
                 DisplayOptions();
             } while (keyPressed != ConsoleKey.Enter);
 
